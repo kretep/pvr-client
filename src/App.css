@@ -1,4 +1,117 @@
+/* app css stylesheet */
+
 .App {
+  padding-top: 12px;
+}
+
+@media print {
+  @page {
+    size: auto;   /* auto is the initial value */
+    margin: 7mm;  /* this affects the margin in the printer settings */
+  }
+
+  .no-print, .no-print * {
+    display: none !important;
+  }
+
+  body {
+    background-color: white !important;
+    font-size: 10px !important;
+    font-weight: normal !important;
+    color: black !important;
+  }
+
+  .table > thead > tr > th,
+  .table > tbody > tr > th,
+  .table > tfoot > tr > th,
+  .table > thead > tr > td,
+  .table > tbody > tr > td,
+  .table > tfoot > tr > td {
+    padding: 0px;
+  }
+}
+
+body {
+  background-color: #ffee88;
+  font-size: 18px;
+  font-weight: normal;
+  color: black;
+}
+
+div.override-date {
+  background-color: #ff8888;
+  overflow: auto;
+}
+
+.btn {
+  font-weight: normal;
+  color: black;
+  margin-right: 6px;
+}
+
+.btn-primary {
+  color: white;
+  background: #337ab7;
+  border-color: #2e6da4;
+}
+
+.btn-secondary {
+  color: black;
+  background: white;
+  border-color: #ccc;
+}
+
+.form-control, .list-group-item {
+  color: black !important;
+}
+
+.form-inline > * {
+  margin: 0px 3px;
+}
+
+input:invalid {
+  background-color: pink;
+}
+input:valid+.patternerror {
+  display: none;
+}
+input:invalid+.patternerror {
+  display: inline;
+}
+input+span+.requirederror {
+  display: none;
+}
+input[value=""]+span+.requirederror {
+  display: inline;
+}
+
+.col-form-label {
+  justify-content: flex-end;
+}
+
+table {
+  background-color: white;
+}
+
+td.fixed {
+  white-space: nowrap !important;
+  padding-right: 4px !important;
+}
+
+.footer {
+  padding-top: 20px;
+  display: inline-block;
+  width: 100%; /* to make centering work */
+  text-align: center;
+}
+
+.errormessage {
+  color: darkred;
+  font-weight: bold;
+}
+
+
+/*.App {
   text-align: center;
 }
 
@@ -23,11 +136,4 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+*/

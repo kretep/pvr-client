@@ -1,26 +1,35 @@
 import React from 'react';
-import logo from './logo.svg';
+import SearchBox from './SearchBox.js';
+import VisitDetails from './VisitDetails';
+import Visits from './Visits';
+import Info from './Info';
+import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+  render() {
+    return (
+      <Router>
+        <div className="App">
+          <main>
+            <Route exact path="/" component={SearchBox} />
+            <Route exact path="/visit/:id" component={VisitDetails} />
+            <Route exact path="/visit" component={VisitDetails} />
+            <Route exact path="/visits" component={Visits} />
+            <Route exact path="/info" component={Info} />
+          </main>
+
+          <div className="footer no-print">
+            <Link to="/">Zoek kind</Link>
+            &nbsp;-&nbsp;
+            <Link to="/visits">Alle inschrijvingen</Link>
+          </div>
+        </div>
+      </Router>
+    );
+  }
 }
 
 export default App;

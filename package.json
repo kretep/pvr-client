@@ -3,9 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/jest": "^24.0.13",
+    "@types/node": "^12.0.7",
+    "@types/react": "^16.8.19",
+    "@types/react-dom": "^16.8.4",
+    "awesome-debounce-promise": "^2.1.0",
+    "bootstrap": "^4.3.1",
+    "query-string": "^6.7.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "3.0.1",
+    "reactn": "^2.1.4",
+    "typescript": "^3.5.1"
   },
   "scripts": {
     "start": "react-scripts start",
