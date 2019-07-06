@@ -3,7 +3,8 @@ import SearchBox from './SearchBox.js';
 import VisitDetails from './VisitDetails';
 import Visits from './Visits';
 import Info from './Info';
-import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
+import NoMatch from './NoMatch';
+import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -14,13 +15,16 @@ class App extends React.Component {
       <Router>
         <div className="App">
           <main>
-            <Route exact path="/" component={SearchBox} />
-            <Route exact path="/visit/:id" component={VisitDetails} />
-            <Route exact path="/visit" component={VisitDetails} />
-            <Route exact path="/visits" component={Visits} />
-            <Route exact path="/info" component={Info} />
+            <Switch>
+              <Route exact path="/" component={SearchBox} />
+              <Route exact path="/visit/:id" component={VisitDetails} />
+              <Route exact path="/visit" component={VisitDetails} />
+              <Route exact path="/visits" component={Visits} />
+              <Route exact path="/info" component={Info} />
+              <Route component={NoMatch} />
+            </Switch>
           </main>
-
+          
           <div className="footer no-print">
             <Link to="/">Zoek kind</Link>
             &nbsp;-&nbsp;
