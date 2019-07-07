@@ -149,7 +149,7 @@ class VisitDetails extends React.Component {
     // First save person, because we need the id if it's new
     try {
       const personID = await ResourceService.saveItem('kinderen', person);
-      visit.kindId = personID;
+      visit.kind = personID;
       if (doSaveVisit) {
         await ResourceService.saveItem('bezoeken', visit);
       }
