@@ -143,6 +143,11 @@ class VisitDetails extends React.Component {
     const data = getFormData(formElement);
     const { person, visit } = this.updateFromFormData(data);
 
+    if (person.name === '') {
+      this.setState({error: "Vul een naam in"});
+      return;
+    }
+
     // Keep a reference to the previous person
     this.setGlobal({ 'previousPerson': person });
 
@@ -214,10 +219,12 @@ class VisitDetails extends React.Component {
     const emailPattern = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.source;
     return (
       <div className={ OVERRIDE_DATE ? 'override-date' : '' }>
-        { error && <div className="col-sm-12 alert alert-danger">{error}</div> }
-        { loading && <div className="col-sm-12 spinner">laden...</div> }
-
-        { message && <div className="offset-sm-2 col-sm-12" style={{ 'paddingBottom': '12px' }}><strong>{message}</strong></div> }
+        <div className="offset-sm-2 col-sm-10">
+          { message && <div className="alert"><strong>{message}</strong></div> }
+          { loading &&  <div className="alert alert-info"><span className="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            <span> Loading...</span></div> }
+          { error && <div className="alert alert-danger"><strong>{error}</strong></div> }
+        </div>
 
         { !loading &&
           <form className="form-horizontal" id="personVisitForm"
