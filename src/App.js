@@ -4,7 +4,7 @@ import VisitDetails from './VisitDetails';
 import Visits from './Visits';
 import Info from './Info';
 import NoMatch from './NoMatch';
-import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 

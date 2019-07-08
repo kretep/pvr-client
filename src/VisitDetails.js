@@ -32,8 +32,7 @@ class VisitDetails extends React.Component {
         name: capitalizeName(queryValues.name)
       } : {}
     }
-      //$scope.message = "";
-
+    this.isActivityChanged = false;
   }
 
   componentDidMount() {
@@ -88,9 +87,9 @@ class VisitDetails extends React.Component {
 
     // Format
     visit.name = capitalizeName(visit.name);
-    visit.phone1 = formatPhoneForDisplay(visit.phone1);
-    visit.phone2 = formatPhoneForDisplay(visit.phone2);
-    visit.phone3 = formatPhoneForDisplay(visit.phone3);
+    visit.phone1 = formatPhoneForSave(visit.phone1);
+    visit.phone2 = formatPhoneForSave(visit.phone2);
+    visit.phone3 = formatPhoneForSave(visit.phone3);
     person.postcode = formatPostcode(person.postcode);
     
     this.setState({
@@ -108,6 +107,17 @@ class VisitDetails extends React.Component {
   }
 
   updateFromFormData(data) {
+  onActivityChange(e) {
+    if (this.isActivityChanged) {
+      // Only copy the activity if it hasn't been changed before
+      return;
+    }
+    const { person, visit } = this.getPersonVisitFromForm();
+    visit.activity2 = visit.activity1
+    this.setState({ visit });
+    this.isActivityChanged = true;
+  }
+
 
     // Update visit, formatting the form data
     const { visit, person } = this.state;
@@ -215,7 +225,6 @@ class VisitDetails extends React.Component {
     const { loading, error, message, visit, person, isAdmin, isNew } = this.state;
     const phonePattern = /(^\+[0-9]{2}|^\+[0-9]{2}\(0\)|^\(\+[0-9]{2}\)\(0\)|^00[0-9]{2}|^0)([0-9]{9}$|[0-9\-\s]{10}$)/.source;
     const postcodePattern = /^[1-9]\d{3}\s?[a-zA-Z]{2}(\s?\d+(\S+)?)?$/.source;
-    //const emailPattern = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/.source;
     const emailPattern = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.source;
     return (
       <div className={ OVERRIDE_DATE ? 'override-date' : '' }>
@@ -245,8 +254,8 @@ class VisitDetails extends React.Component {
               <FormInput name="phone2" label="Tel. 2:" value={ visit.phone2 } pattern={ phonePattern } patternMessage="Ongeldig telefoonnummer" />
               <FormInput name="phone3" label="Tel. 3:" value={ visit.phone3 } pattern={ phonePattern } patternMessage="Ongeldig telefoonnummer" />
               <FormInput name="remarks" label="Opmerkingen:" value={ visit.remarks } />
-              <FormSelect name="activity1" label="Onderdeel ochtend:" value={ visit.activity1 } options={ activities } />
-              <FormSelect name="activity2" label="Onderdeel middag:" value={ visit.activity2 } options={ activities } />
+              <FormSelect name="activity1" label="Ochtend:" value={ visit.activity1 } options={ activities } onChange={ this.onActivityChange.bind(this) } />
+              <FormSelect name="activity2" label="Middag:" value={ visit.activity2 } options={ activities } />
               <FormInput name="email" label="Email:" value={ person.email } pattern={ emailPattern } patternMessage="Ongeldig emailadres" />
               <FormInput name="postcode" label="Postcode:" value={ person.postcode } patternMessage="Ongeldige postcode" pattern={ postcodePattern } />
             </div>
