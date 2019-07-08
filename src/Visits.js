@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import queryString from 'query-string';
+import dateFormat from 'dateformat';
 import ResourceService from './services';
 import { OVERRIDE_DATE, getCurrentDate } from './CurrentDate';
 import { getFormData, getFormDataFromEvent } from './utils';
@@ -14,6 +15,7 @@ export default class Visits extends React.Component {
     const queryValues = queryString.parse(props.location.search);
     this.state = {
       loading: true,
+      error: '',
       date: getCurrentDate(),
       search: '',
       activity: '',
@@ -65,8 +67,8 @@ export default class Visits extends React.Component {
   }
 
   render () {
-    const { loading, visits, date, search, activity, isAdmin } = this.state;
-    //date format 'EEEE d MMMM yyyy'
+    const { loading, error, visits, date, search, activity, isAdmin } = this.state;
+    const formattedDate = dateFormat(Date.parse(date), 'dddd d mmmm yyyy');
     return (
     <div className={ OVERRIDE_DATE ? 'override-date' : '' }>
       <div className="col-sm-12 form-group">
@@ -84,12 +86,17 @@ export default class Visits extends React.Component {
         </form>
       </div>
     
-{/*      <div ng-if="error" className="col-sm-12 alert alert-danger">{{error}}</div>
-      <div ng-show="loading" className="col-sm-12 spinner">laden...</div>
-*/}
+      <div className="col-sm-12">
+        { loading &&  <div className="alert alert-info">
+          <span className="spinner-grow" role="status" aria-hidden="true"></span>
+          <span> Laden...</span>
+        </div> }
+        { error && <div className="alert alert-danger"><strong>{error}</strong></div> }
+      </div>
+
       { !loading && visits !== undefined && <div>
         <div className="col-sm-12">
-          <p>Inschrijvingen voor { date }
+          <p>Inschrijvingen voor { formattedDate }
             { search && <span>, "{ search }"</span> }
             { activity && <span>, { activity }</span> }
             &nbsp;({ visits.length })
@@ -139,6 +146,10 @@ export default class Visits extends React.Component {
         </div> }
 
       </div> }
+
+      <div className="col-sm-12 form-group no-print">
+          <Link to="/" className="float-left">Terug naar zoeken</Link>
+      </div>
     </div>
     );
   }

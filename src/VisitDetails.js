@@ -223,7 +223,7 @@ class VisitDetails extends React.Component {
           { message && <div className="alert"><strong>{message}</strong></div> }
           { loading &&  <div className="alert alert-info">
             <span className="spinner-grow" role="status" aria-hidden="true"></span>
-            <span> Loading...</span>
+            <span> Laden...</span>
           </div> }
           { error && <div className="alert alert-danger"><strong>{error}</strong></div> }
         </div>
@@ -233,8 +233,9 @@ class VisitDetails extends React.Component {
             autoComplete="off" noValidate
             onSubmit={this.onFormSubmit.bind(this)}>
 
-            { isNew && <div className="offset-sm-3 col-sm-9 form-group">
-              <button type="button" className="btn btn-secondary btn-lg" disabled={!this.global.previousPerson} onClick={this.copyFromPreviousPerson.bind(this)}>Kopieer van vorig kind</button>
+            { isNew && this.global.previousPerson && <div className="offset-sm-3 col-sm-9 form-group">
+              <button type="button" className="btn btn-secondary btn-lg" 
+              onClick={this.copyFromPreviousPerson.bind(this)}>Kopieer van vorig kind</button>
             </div> }
 
             <div className="col-sm-12">

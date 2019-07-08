@@ -24,12 +24,6 @@ class App extends React.Component {
               <Route component={NoMatch} />
             </Switch>
           </main>
-          
-          <div className="footer no-print">
-            <Link to="/">Zoek kind</Link>
-            &nbsp;-&nbsp;
-            <Link to="/visits">Alle inschrijvingen</Link>
-          </div>
         </div>
       </Router>
     );

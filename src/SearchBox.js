@@ -73,22 +73,36 @@ export default class SearchBox extends React.Component {
     }, this.executeSearch)
   }
 
+  showAll() {
+    this.setState({matchPhone: '', matchName: ''},
+      this.executeSearch);
+  }
+
   render () {
-    const { loading, page, pageSize, items, itemCount, searchText } = this.state;
+    const { loading, page, pageSize, items, itemCount, searchText,
+      matchPhone, matchName } = this.state;
     return (
       <div className={ OVERRIDE_DATE ? 'override-date' : '' }>
         <div className="col-sm-12 form-group">
-          <form className="form-horizontal" noValidate>
-            <input type="text" className="form-control input-lg" placeholder="Kind zoeken" onChange={this.handleTextChange} />
+          <form noValidate>
+            <input type="text" className="form-control input-lg" placeholder="Kind zoeken" 
+              onChange={this.handleTextChange} autoComplete="off" autoFocus />
           </form>
         </div>
+
+        { matchPhone && <div className="alert"><strong>Matches voor {matchName}</strong>
+          <button className="btn btn-secondary btn-lg float-right"
+            onClick={this.showAll.bind(this)}>Alles</button>
+        </div> }
 
         <div className="col-sm-12 form-group">
           <button className="btn btn-secondary btn-lg" onClick={this.previousPage.bind(this)}>&lt;</button>
           <button className="btn btn-secondary btn-lg" onClick={this.nextPage.bind(this)}>&gt;</button>
-          { loading && <span className="spinner">Laden...</span> }
-          { !loading && items.length > 0 && <span>{(page - 1) * pageSize + 1} - {(page - 1) * pageSize + items.length} van { itemCount } resultaten</span> }
-          { !loading && items.length === 0 && <span>Geen kinderen gevonden</span> }
+          { loading && <span><span className="spinner-grow" role="status" aria-hidden="true"></span>
+            <span> Laden...</span></span> }
+          { !loading && items.length > 0 && <span>{(page - 1) * pageSize + 1} - {(page - 1) * pageSize + items.length} van { itemCount }</span> }
+          { !loading && items.length === 0 && <span>Niets gevonden</span> }
+          <Link to={"/visit/?name=" + searchText} className="btn btn-secondary btn-lg float-right" role="button">Nieuw kind</Link>
         </div>
 
         { !loading && <div className="col-sm-12 form-group">
@@ -100,7 +114,11 @@ export default class SearchBox extends React.Component {
         </div> }
 
         <div className="col-sm-12 form-group">
-          <Link to={"/visit/?name=" + searchText} className="btn btn-secondary btn-lg" role="button">Voeg nieuw kind toe</Link>
+          <Link to={"/visit/?name=" + searchText} className="btn btn-secondary btn-lg float-right" role="button">Nieuw kind</Link>
+        </div>
+
+        <div className="col-sm-12 form-group">
+          <Link to="/visits" className="float-left">Inschrijvingen vandaag</Link>
         </div>
       </div>
     );
