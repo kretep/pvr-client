@@ -219,10 +219,12 @@ class VisitDetails extends React.Component {
     const emailPattern = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.source;
     return (
       <div className={ OVERRIDE_DATE ? 'override-date' : '' }>
-        <div className="offset-sm-2 col-sm-10">
+        <div className="col-sm-12">
           { message && <div className="alert"><strong>{message}</strong></div> }
-          { loading &&  <div className="alert alert-info"><span className="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-            <span> Loading...</span></div> }
+          { loading &&  <div className="alert alert-info">
+            <span className="spinner-grow" role="status" aria-hidden="true"></span>
+            <span> Loading...</span>
+          </div> }
           { error && <div className="alert alert-danger"><strong>{error}</strong></div> }
         </div>
 
@@ -231,24 +233,29 @@ class VisitDetails extends React.Component {
             autoComplete="off" noValidate
             onSubmit={this.onFormSubmit.bind(this)}>
 
+            <div className="offset-sm-3 col-sm-9 form-group">
+              <button type="button" className="btn btn-secondary btn-lg" disabled={!this.global.previousPerson} onClick={this.copyFromPreviousPerson.bind(this)}>Kopieer van vorig kind</button>
+            </div>
+
             <div className="col-sm-12">
               { isAdmin && <FormInput name="date" label="Datum:" value={ visit.date } /> }
               <FormInput name="name" label="Naam:" value={ visit.name } requiredMessage="Voer naam in" />
-              <FormInput name="phone1" label="Telefoon 1:" value={ visit.phone1 } pattern={ phonePattern } requiredMessage="Voer minstens 1 telefoonnummer in" patternMessage="Ongeldig telefoonnummer" />
-              <FormInput name="phone2" label="Telefoon 2:" value={ visit.phone2 } pattern={ phonePattern } patternMessage="Ongeldig telefoonnummer" />
-              <FormInput name="phone3" label="Telefoon 3:" value={ visit.phone3 } pattern={ phonePattern } patternMessage="Ongeldig telefoonnummer" />
+              <FormInput name="phone1" label="Tel. 1:" value={ visit.phone1 } pattern={ phonePattern } requiredMessage="Voer minstens 1 telefoonnummer in" patternMessage="Ongeldig telefoonnummer" />
+              <FormInput name="phone2" label="Tel. 2:" value={ visit.phone2 } pattern={ phonePattern } patternMessage="Ongeldig telefoonnummer" />
+              <FormInput name="phone3" label="Tel. 3:" value={ visit.phone3 } pattern={ phonePattern } patternMessage="Ongeldig telefoonnummer" />
               <FormInput name="remarks" label="Opmerkingen:" value={ visit.remarks } />
-              <FormInput name="email" label="Email:" value={ person.email } pattern={ emailPattern } patternMessage="Ongeldig emailadres" />
-              <FormInput name="postcode" label="Postcode:" value={ person.postcode } patternMessage="Ongeldige postcode" pattern={ postcodePattern } />
               <FormSelect name="activity1" label="Onderdeel ochtend:" value={ visit.activity1 } options={ activities } />
               <FormSelect name="activity2" label="Onderdeel middag:" value={ visit.activity2 } options={ activities } />
+              <FormInput name="email" label="Email:" value={ person.email } pattern={ emailPattern } patternMessage="Ongeldig emailadres" />
+              <FormInput name="postcode" label="Postcode:" value={ person.postcode } patternMessage="Ongeldige postcode" pattern={ postcodePattern } />
             </div>
 
-            <div className="offset-md-2 col-sm-12 form-group">
-              <button type="submit" className="btn btn-primary btn-lg">Bezoek opslaan</button>
-              { isAdmin && <button type="button" className="btn btn-primary btn-lg" onClick={this.savePersonVisit.bind(this, false)}>Alleen kind opslaan</button> }
-              <button type="button" className="btn btn-secondary btn-lg" onClick={this.cancelPersonVisit.bind(this)}>Annuleren</button>
-              <button type="button" className="btn btn-secondary btn-lg" disabled={!this.global.previousPerson} onClick={this.copyFromPreviousPerson.bind(this)}>Kopieer van vorig kind</button>
+            <div className="col-sm-12 form-group">
+              <div className="float-right">
+                <button type="button" className="btn btn-secondary btn-lg" onClick={this.cancelPersonVisit.bind(this)}>Annuleren</button>
+                <button type="submit" className="btn btn-primary btn-lg">Bezoek opslaan</button>
+                { isAdmin && <button type="button" className="btn btn-primary btn-lg" onClick={this.savePersonVisit.bind(this, false)}>Alleen kind opslaan</button> }
+              </div>
             </div>
 
           </form>

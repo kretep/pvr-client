@@ -16,8 +16,8 @@ export class FormInput extends React.Component {
     const { name, value, label, pattern, requiredMessage, patternMessage } = this.state;
     return (
       <div className="form-group row">
-        <label className="control-label col-sm-2 col-form-label" htmlFor={ name }>{ label }</label>
-        <div className="col-sm-10">
+        <label className="control-label col-sm-3 col-form-label" htmlFor={ name }>{ label }</label>
+        <div className="col-sm-9">
           <input type="text" className="form-control input-lg" name={ name } 
             value={ value } onChange={e => this.setState({value: e.target.value})}
             pattern={ pattern } autoComplete="off"/>

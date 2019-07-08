@@ -36,6 +36,14 @@ body {
   font-size: 18px;
   font-weight: normal;
   color: black;
+
+  /* Prevent refresh on pull */
+  overscroll-behavior: none;
+
+  /* Zoom because controls are just a bit small on a tablet */
+  zoom: 1.4;
+  -moz-transform: scale(1.4);
+  -moz-transform-origin: 0 0;
 }
 
 div.override-date {
