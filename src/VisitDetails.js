@@ -22,7 +22,10 @@ class VisitDetails extends React.Component {
     const isNew = id === undefined;
     this.state = {
       loading: false,
+      saving: false,
+      savingPerson: false,
       message: 'Nieuw kind, nieuw bezoek',
+      error: '',
       id,
       isNew,
       isAdmin: queryValues.admin === 'true' || isLocalhost(),
@@ -160,7 +163,7 @@ class VisitDetails extends React.Component {
     const { person, visit } = this.getPersonVisitFromForm();
 
     if (person.name === '') {
-      this.setState({error: "Vul een naam in"});
+      this.setState({error: "Vul een naam in", saving: false, savingPerson: false});
       return;
     }
 
@@ -178,7 +181,7 @@ class VisitDetails extends React.Component {
       this.navigateToSearchPage(visit);
     }
     catch(error) {
-      this.setState({errorMessage: error});
+      this.setState({error: error, saving: false, savingPerson: false});
     }
   }
 
@@ -229,7 +232,7 @@ class VisitDetails extends React.Component {
   }
 
   render () {
-    const { loading, error, message, visit, person, isAdmin, isNew } = this.state;
+    const { loading, saving, savingPerson, error, message, visit, person, isAdmin, isNew } = this.state;
     const { previousPerson } = this.global;
     const phonePattern = /(^\+[0-9]{2}|^\+[0-9]{2}\(0\)|^\(\+[0-9]{2}\)\(0\)|^00[0-9]{2}|^0)([0-9]{9}$|[0-9\-\s]{10}$)/.source;
     const postcodePattern = /^[1-9]\d{3}\s?[a-zA-Z]{2}(\s?\d+(\S+)?)?$/.source;
@@ -271,8 +274,12 @@ class VisitDetails extends React.Component {
             <div className="col-sm-12 form-group">
               <div className="float-right">
                 <button type="button" className="btn btn-secondary btn-lg" onClick={this.cancelPersonVisit.bind(this)}>Annuleren</button>
-                <button type="submit" className="btn btn-primary btn-lg">Bezoek opslaan</button>
-                { isAdmin && <button type="button" className="btn btn-primary btn-lg" onClick={this.savePersonVisit.bind(this, false)}>Alleen kind opslaan</button> }
+                <button type="submit" className="btn btn-primary btn-lg">
+                  { saving && <span className="spinner-grow" role="status" aria-hidden="true"></span> }
+                  Bezoek opslaan</button>
+                { isAdmin && <button type="button" className="btn btn-primary btn-lg" onClick={this.savePersonVisit.bind(this, false)}>
+                  { savingPerson && <span className="spinner-grow" role="status" aria-hidden="true"></span> }
+                  Alleen kind opslaan</button> }
               </div>
             </div>
 
