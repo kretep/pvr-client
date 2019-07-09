@@ -259,16 +259,16 @@ class VisitDetails extends React.Component {
             </div> }
 
             <div className="col-sm-12">
-              { isAdmin && <FormInput name="date" label="Datum:" value={ visit.date } /> }
-              <FormInput name="name" label="Naam:" value={ visit.name } requiredMessage="Voer naam in" />
-              <FormInput name="phone1" label="Tel. 1:" value={ visit.phone1 } pattern={ phonePattern } requiredMessage="Voer minstens 1 telefoonnummer in" patternMessage="Ongeldig telefoonnummer" />
-              <FormInput name="phone2" label="Tel. 2:" value={ visit.phone2 } pattern={ phonePattern } patternMessage="Ongeldig telefoonnummer" />
-              <FormInput name="phone3" label="Tel. 3:" value={ visit.phone3 } pattern={ phonePattern } patternMessage="Ongeldig telefoonnummer" />
-              <FormInput name="remarks" label="Opmerkingen:" value={ visit.remarks } />
+              { isAdmin && <FormInput name="date" type="date" label="Datum:" value={ visit.date } /> }
+              <FormInput name="name" type="text" label="Naam:" value={ visit.name } requiredMessage="Voer naam in" />
+              <FormInput name="phone1" type="tel" label="Tel. 1:" value={ visit.phone1 } pattern={ phonePattern } requiredMessage="Voer minstens 1 telefoonnummer in" patternMessage="Ongeldig telefoonnummer" />
+              <FormInput name="phone2" type="tel" label="Tel. 2:" value={ visit.phone2 } pattern={ phonePattern } patternMessage="Ongeldig telefoonnummer" />
+              <FormInput name="phone3" type="tel" label="Tel. 3:" value={ visit.phone3 } pattern={ phonePattern } patternMessage="Ongeldig telefoonnummer" />
+              <FormInput name="remarks" type="text" label="Opmerkingen:" value={ visit.remarks } />
               <FormSelect name="activity1" label="Ochtend:" value={ visit.activity1 } options={ activities } onChange={ this.onActivityChange.bind(this) } />
               <FormSelect name="activity2" label="Middag:" value={ visit.activity2 } options={ activities } />
-              <FormInput name="email" label="Email:" value={ person.email } pattern={ emailPattern } patternMessage="Ongeldig emailadres" />
-              <FormInput name="postcode" label="Postcode:" value={ person.postcode } patternMessage="Ongeldige postcode" pattern={ postcodePattern } />
+              <FormInput name="email" type="email" label="Email:" value={ person.email } pattern={ emailPattern } patternMessage="Ongeldig emailadres" />
+              <FormInput name="postcode" type="text" label="Postcode:" value={ person.postcode } patternMessage="Ongeldige postcode" pattern={ postcodePattern } />
             </div>
 
             <div className="col-sm-12 form-group">

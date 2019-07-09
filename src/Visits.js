@@ -74,7 +74,7 @@ export default class Visits extends React.Component {
       <div className="col-sm-12 form-group">
         <form id="filterVisitsForm" className="form-inline no-print" noValidate onSubmit={this.search.bind(this)}>
           <label className="control-label" htmlFor="date">Filter:</label>
-          <input type="text" className="form-control input-lg" name="date" defaultValue={date}/>
+          <input type="date" className="form-control input-lg" name="date" defaultValue={date} onChange={this.search2.bind(this)} />
           <input type="text" className="form-control input-lg" name="search" placeholder="naam..." />
           <select className="form-control input-lg" name="activity" onChange={this.search2.bind(this)}>
             <option key="all" value="all">Alles</option>
