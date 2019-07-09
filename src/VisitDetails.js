@@ -106,7 +106,6 @@ class VisitDetails extends React.Component {
       this.debounceSearch);
   }
 
-  updateFromFormData(data) {
   onActivityChange(e) {
     if (this.isActivityChanged) {
       // Only copy the activity if it hasn't been changed before
@@ -118,6 +117,9 @@ class VisitDetails extends React.Component {
     this.isActivityChanged = true;
   }
 
+  getPersonVisitFromForm() {
+    const formElement = document.getElementById("personVisitForm");
+    const data = getFormData(formElement);
 
     // Update visit, formatting the form data
     const { visit, person } = this.state;
@@ -149,9 +151,13 @@ class VisitDetails extends React.Component {
   }
 
   async savePersonVisit(doSaveVisit=true) {
-    const formElement = document.getElementById("personVisitForm");
-    const data = getFormData(formElement);
-    const { person, visit } = this.updateFromFormData(data);
+    if (doSaveVisit) {
+      this.setState({ saving: true });
+    }
+    else {
+      this.setState({ savingPerson: true });
+    }
+    const { person, visit } = this.getPersonVisitFromForm();
 
     if (person.name === '') {
       this.setState({error: "Vul een naam in"});
@@ -177,8 +183,11 @@ class VisitDetails extends React.Component {
   }
 
   cancelPersonVisit() {
-    this.setGlobal({ 'previousPerson': this.state.person });
-    this.navigateToSearchPage(this.state.visit);
+    const { person, visit } = this.getPersonVisitFromForm();
+    if (person.name !== '') {
+      this.setGlobal({ 'previousPerson': person });
+    }
+    this.navigateToSearchPage(visit);
   }
 
   navigateToSearchPage(matchVisit) {
@@ -189,9 +198,7 @@ class VisitDetails extends React.Component {
   }
 
   copyFromPreviousPerson() {
-    const formElement = document.getElementById("personVisitForm");
-    const data = getFormData(formElement);
-    const { person, visit } = this.updateFromFormData(data);
+    const { person, visit } = this.getPersonVisitFromForm();
     const { previousPerson } = this.global;
     if (!previousPerson) {
       return;
@@ -223,6 +230,7 @@ class VisitDetails extends React.Component {
 
   render () {
     const { loading, error, message, visit, person, isAdmin, isNew } = this.state;
+    const { previousPerson } = this.global;
     const phonePattern = /(^\+[0-9]{2}|^\+[0-9]{2}\(0\)|^\(\+[0-9]{2}\)\(0\)|^00[0-9]{2}|^0)([0-9]{9}$|[0-9\-\s]{10}$)/.source;
     const postcodePattern = /^[1-9]\d{3}\s?[a-zA-Z]{2}(\s?\d+(\S+)?)?$/.source;
     const emailPattern = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.source;
@@ -242,9 +250,9 @@ class VisitDetails extends React.Component {
             autoComplete="off" noValidate
             onSubmit={this.onFormSubmit.bind(this)}>
 
-            { isNew && this.global.previousPerson && <div className="offset-sm-3 col-sm-9 form-group">
+            { isNew && previousPerson && previousPerson.name !== '' && <div className="offset-sm-3 col-sm-9 form-group">
               <button type="button" className="btn btn-secondary btn-lg" 
-              onClick={this.copyFromPreviousPerson.bind(this)}>Kopieer van vorig kind</button>
+              onClick={this.copyFromPreviousPerson.bind(this)}>Kopieer van {previousPerson.name}</button>
             </div> }
 
             <div className="col-sm-12">
