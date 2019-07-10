@@ -2,10 +2,10 @@ import React from 'reactn';
 import queryString from 'query-string';
 import { withRouter } from 'react-router-dom';
 import ResourceService from './services';
-import { capitalizeName, formatPhoneForDisplay, formatPostcode, formatPhoneForSave } from './formatters';
+import { capitalizeName, formatPostcode, formatPhoneForSave } from './formatters';
 import { FormInput } from './FormInput';
 import { FormSelect } from './FormSelect';
-import { OVERRIDE_DATE, getCurrentDate } from './CurrentDate';
+import { OVERRIDE_DATE, getCurrentDate, getNow } from './CurrentDate';
 import { activities } from './jeugddorp';
 import { getFormData } from './utils';
 import { isLocalhost } from './network';
@@ -30,8 +30,9 @@ class VisitDetails extends React.Component {
       isNew,
       isAdmin: queryValues.admin === 'true' || isLocalhost(),
       person: {},
-      visit: isNew ? {
+      visit: isNew ? { // Create default visit for new person
         date: getCurrentDate(),
+        created: getNow(),
         name: capitalizeName(queryValues.name)
       } : {}
     }
@@ -58,9 +59,10 @@ class VisitDetails extends React.Component {
     }
     let message = '';
     if (visit === null && person !== null) {
-      // Create default visit (copy from person)
+      // Create default visit for existing person
       visit = {
         date,
+        created: getNow(),
         kind: id,
         name: person.name,
         phone1: person.phone1,
@@ -126,7 +128,10 @@ class VisitDetails extends React.Component {
 
     // Update visit, formatting the form data
     const { visit, person } = this.state;
-    visit.date = data.date;
+    if (data.date) { // only applies for admin
+      visit.date = data.date;
+    }
+    visit.lastupdated = new Date().toISOString();
     visit.name = capitalizeName(data.name);
     visit.phone1 = formatPhoneForSave(data.phone1);
     visit.phone2 = formatPhoneForSave(data.phone2);
