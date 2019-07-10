@@ -37,6 +37,7 @@ export default class ResourceService {
     return fetch(getAPIPath() + collection + paramString, {
       credentials: 'include'
     })
+      .then(ResourceService._handleErrors)
       .then(response => response.json())
       .then(data => {
         var result = {
@@ -69,6 +70,7 @@ export default class ResourceService {
     const promise = fetch(`${getAPIPath() + collection}?${query}`, {
       credentials: 'include'
     })
+      .then(ResourceService._handleErrors)
       .then(response => response.json())
       .then(data => {
         if (data !== undefined) {
@@ -78,9 +80,6 @@ export default class ResourceService {
         }
         return [];
       });
-      // .error(function(data, status) {
-      //   deferred.reject(_processError(data, status));
-      // });
     return promise;
   }
 
@@ -88,16 +87,14 @@ export default class ResourceService {
     const promise = fetch(`${getAPIPath() + collection}/${id}`, {
       credentials: 'include'
     })
+      .then(ResourceService._handleErrors)
       .then(response => response.json())
       .then(data => {
         if (data !== undefined) {
-          return data
+          return data;
         }
-        return null
-      });
-      // .error(function(data, status) {
-      //   deferred.reject(_processError(data, status));
-      // });
+        return null;
+      })
     return promise;
   }
 
@@ -127,6 +124,7 @@ export default class ResourceService {
         headers: headers,
         credentials: 'include'
       })
+        .then(ResourceService._handleErrors)
         .then(response => {
           // update etag with new value
           var etag = response.headers.get('etag');
@@ -134,10 +132,6 @@ export default class ResourceService {
           // complete call
           return itemId;
         });
-
-      // .error(function(data, status) {
-      //   deferred.reject(_processError(data, status));
-      // });
     }
     else {
       // Create new entity
@@ -147,8 +141,8 @@ export default class ResourceService {
         headers: headers,
         credentials: 'include'
       })
+        .then(ResourceService._handleErrors)
         .then(response => {
-          console.log(response);
           // set etag
           var etag = response.headers.get('etag');
           item._etag = { '$oid': etag };
@@ -158,9 +152,6 @@ export default class ResourceService {
           item._id = { '$oid': itemId };
           return itemId;
         });
-      // .error(function(data, status) {
-      //   deferred.reject(_processError(data, status));
-      // });
     }
 
     return promise;
@@ -176,25 +167,17 @@ export default class ResourceService {
       headers: headers,
       credentials: 'include'
     })
+      .then(ResourceService._handleErrors)
       .then(() => itemId)
-      // .error(function(data, status) {
-      //   deferred.reject(_processError(data, status));
-      // });
     return promise;
   }
 
-  _processError(data, status) {
-    if (status === 0) {
-      return "Connection error";
+  static _handleErrors(response) {
+    if (!response.ok) {
+      throw Error(`${response.statusText} (${response.status})`);
     }
-    var statusCode = data["http status code"];
-    if (statusCode) {
-      return "" + statusCode + " - " +
-        data["http status description"] + "; " + data["message"];
-    }
-    return "Error returned from server: " + status;
+    return response;
   }
-
 
   /*nodes(page, pageSize, searchFilter) {
     // Construct parameters for paging & filtering

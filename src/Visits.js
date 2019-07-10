@@ -46,8 +46,15 @@ export default class Visits extends React.Component {
         { activity2: activity }
       ]
     }
-    const visits = await ResourceService.getItems('bezoeken', filter);
-    this.setState({ loading: false, visits });
+    try {
+      const visits = await ResourceService.getItems('bezoeken', filter);
+      this.setState({ loading: false, visits });
+    }
+    catch(error) {
+      this.setState({ error: `Fout bij het zoeken; probeer het opnieuw. 
+        Details: ${error}`, loading: false });
+      return;
+    }
   }
 
   search(e) {
@@ -70,10 +77,17 @@ export default class Visits extends React.Component {
   async removeVisit(visit) {
     const { visits } = this.state;
     if (window.confirm(`Bezoek verwijderen voor ${visit.name}?`)) {
-      await ResourceService.deleteItem('bezoeken', visit);
-      const index = visits.indexOf(visit);
-      visits.splice(index, 1);
-      this.setState({ visits });
+      try {
+        await ResourceService.deleteItem('bezoeken', visit);
+        const index = visits.indexOf(visit);
+        visits.splice(index, 1);
+        this.setState({ visits });
+      }
+      catch(error) {
+        this.setState({ error: `Fout bij verwijderen; probeer het opnieuw. 
+          Details: ${error}`, loading: false });
+        return;
+      }
     }
   }
 
@@ -138,9 +152,9 @@ export default class Visits extends React.Component {
                 return (
                 <tr key={ visit._id.$oid }>
                   <td className="fixed">{ index + 1 }</td>
-                  <td className="fixed"><button type="button" className="close"
+                  { isAdmin && <td className="fixed"><button type="button" className="close"
                     onClick={() => {this.removeVisit(visit)}}>
-                    <span>&times;</span></button></td>
+                    <span>&times;</span></button></td> }
                   <td className="fixed">
                     <Link to={"visit/" + visit.kind}>{visit.name}</Link></td>
                   <td className="fixed">{ visit.phone1 }</td>

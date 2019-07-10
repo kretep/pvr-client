@@ -16,6 +16,7 @@ export default class SearchBox extends React.Component {
     const queryValues = queryString.parse(props.location.search);
     this.state = {
       loading: true,
+      error: '',
       page: 1,
       pageSize: 10,
       searchText: '',
@@ -47,8 +48,15 @@ export default class SearchBox extends React.Component {
         { phone3: matchPhone }
       ]
     }
-    const results = await ResourceService.searchItems('kinderen', filter, page, pageSize);
-    this.setState({ loading: false, ...results });
+    try {
+      const results = await ResourceService.searchItems('kinderen', filter, page, pageSize);
+      this.setState({ loading: false, ...results });
+    }
+    catch(error) {
+      this.setState({ error: `Fout bij het zoeken; probeer het opnieuw. 
+        Details: ${error}`, loading: false });
+      return;
+    }
   }
 
   handleTextChange(e) {
@@ -79,7 +87,7 @@ export default class SearchBox extends React.Component {
   }
 
   render () {
-    const { loading, page, pageSize, items, itemCount, searchText,
+    const { loading, error, page, pageSize, items, itemCount, searchText,
       matchPhone, matchName } = this.state;
     return (
       <div className={ OVERRIDE_DATE ? 'override-date' : '' }>
@@ -89,6 +97,8 @@ export default class SearchBox extends React.Component {
               onChange={this.handleTextChange} autoComplete="off" autoFocus />
           </form>
         </div>
+
+        { error && <div className="alert alert-danger"><strong>{error}</strong></div> }
 
         { matchPhone && <div className="alert"><strong>Matches voor {matchName}</strong>
           <button className="btn btn-secondary btn-lg float-right"

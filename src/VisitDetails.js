@@ -1,6 +1,6 @@
 import React from 'reactn';
 import queryString from 'query-string';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import ResourceService from './services';
 import { capitalizeName, formatPostcode, formatPhoneForSave } from './formatters';
 import { FormInput } from './FormInput';
@@ -47,12 +47,20 @@ class VisitDetails extends React.Component {
 
   async fetchPerson() {
     this.setState({ loading: true, message: '' });
-    const id = this.state.id;
+    const personID = this.state.id;
     const date = getCurrentDate();
-    let [person, visits] = await Promise.all([
-      ResourceService.getItem('kinderen', id),
-      ResourceService.getItems('bezoeken', { kind: id, date })
-    ]);
+    let person = {}, visits = [];
+    try {
+      [person, visits] = await Promise.all([
+        ResourceService.getItem('kinderen', personID),
+        ResourceService.getItems('bezoeken', { kind: personID, date })
+      ]);
+    }
+    catch(error) {
+      this.setState({ error: `Fout bij ophalen van het kind of bezoek; probeer het opnieuw. Details: ${error}`,
+       loading: false, person: {}, visit: {} });
+      return;
+    }
     let visit = null;
     if (visits.length > 0) {
       visit = visits[0]; //TODO: move to convenience function
@@ -63,7 +71,7 @@ class VisitDetails extends React.Component {
       visit = {
         date,
         created: getNow(),
-        kind: id,
+        kind: personID,
         name: person.name,
         phone1: person.phone1,
         phone2: person.phone2,
@@ -80,7 +88,7 @@ class VisitDetails extends React.Component {
         this.setState({
           person: {},
           visit: {},
-          error: "Kon geen kind vinden voor id " + id,
+          error: "Kon geen kind vinden voor id " + personID,
           loading: false
         })
         return;
@@ -116,7 +124,7 @@ class VisitDetails extends React.Component {
       // Only copy the activity if it hasn't been changed before
       return;
     }
-    const { person, visit } = this.getPersonVisitFromForm();
+    const { visit } = this.getPersonVisitFromForm();
     visit.activity2 = visit.activity1
     this.setState({ visit });
     this.isActivityChanged = true;
@@ -173,9 +181,6 @@ class VisitDetails extends React.Component {
       return;
     }
 
-    // Keep a reference to the previous person
-    this.setGlobal({ 'previousPerson': person });
-
     // First save person, because we need the id if it's new
     try {
       const personID = await ResourceService.saveItem('kinderen', person);
@@ -184,10 +189,14 @@ class VisitDetails extends React.Component {
         await ResourceService.saveItem('bezoeken', visit);
       }
 
+      // Keep a reference to the previous person
+      this.setGlobal({ 'previousPerson': person });
+
       this.navigateToSearchPage(visit);
     }
     catch(error) {
-      this.setState({error: error, saving: false, savingPerson: false});
+      this.setState({error: `Fout bij opslaan van kind of bezoek. Probeer het opnieuw. Details: ${error}`,
+        saving: false, savingPerson: false});
     }
   }
 
@@ -240,6 +249,7 @@ class VisitDetails extends React.Component {
   render () {
     const { loading, saving, savingPerson, error, message, visit, person, isAdmin, isNew } = this.state;
     const { previousPerson } = this.global;
+    const isLoadedSuccess = Object.keys(visit).length > 0;
     const phonePattern = /(^\+[0-9]{2}|^\+[0-9]{2}\(0\)|^\(\+[0-9]{2}\)\(0\)|^00[0-9]{2}|^0)([0-9]{9}$|[0-9\-\s]{10}$)/.source;
     const postcodePattern = /^[1-9]\d{3}\s?[a-zA-Z]{2}(\s?\d+(\S+)?)?$/.source;
     const emailPattern = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.source;
@@ -254,7 +264,12 @@ class VisitDetails extends React.Component {
           { error && <div className="alert alert-danger"><strong>{error}</strong></div> }
         </div>
 
-        { !loading &&
+        { !loading && !isLoadedSuccess &&
+          <div className="col-sm-12 form-group no-print">
+            <Link to="/" className="float-left">Terug naar zoeken</Link>
+        </div> }
+
+        { !loading && isLoadedSuccess &&
           <form className="form-horizontal" id="personVisitForm"
             autoComplete="off" noValidate
             onSubmit={this.onFormSubmit.bind(this)}>
