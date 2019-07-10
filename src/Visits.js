@@ -22,6 +22,7 @@ export default class Visits extends React.Component {
       visits: [],
       isAdmin: queryValues.admin === 'true' || isLocalhost()
     }
+    this.removeVisit = this.removeVisit.bind(this);
   }
 
   componentDidMount() {
@@ -64,6 +65,16 @@ export default class Visits extends React.Component {
     const { date, search, activity } = data;
     this.setState({ date, search, activity });
     this.fetchVisits(data);
+  }
+
+  async removeVisit(visit) {
+    const { visits } = this.state;
+    if (window.confirm(`Bezoek verwijderen voor ${visit.name}?`)) {
+      await ResourceService.deleteItem('bezoeken', visit);
+      const index = visits.indexOf(visit);
+      visits.splice(index, 1);
+      this.setState({ visits });
+    }
   }
 
   render () {
@@ -112,7 +123,7 @@ export default class Visits extends React.Component {
             <thead>
               <tr>
                 <th>#</th>
-                { isAdmin && <th className="no-print">Tijd</th> }
+                { isAdmin && <th>&times;</th> }
                 <th>Naam</th>
                 <th>Tel. 1</th>
                 <th>Tel. 2</th>
@@ -127,11 +138,10 @@ export default class Visits extends React.Component {
                 return (
                 <tr key={ visit._id.$oid }>
                   <td className="fixed">{ index + 1 }</td>
-                  { isAdmin && <td className="fixed no-print">{ visit._lastupdated_on}</td> }
+                  <td className="fixed"><button type="button" className="close"
+                    onClick={() => {this.removeVisit(visit)}}>
+                    <span>&times;</span></button></td>
                   <td className="fixed">
-                    { isAdmin && <span className="no-print">
-                      <input type="checkbox" ng-model="bezoek.selected" />&nbsp;
-                    </span> }
                     <Link to={"visit/" + visit.kind}>{visit.name}</Link></td>
                   <td className="fixed">{ visit.phone1 }</td>
                   <td className="fixed">{ visit.phone2 }</td>
@@ -143,12 +153,6 @@ export default class Visits extends React.Component {
             </tbody>
           </table>
         </div>
-    
-        { isAdmin && <div className="col-sm-12 form-group no-print"> 
-          <button type="button" className="btn btn-secondary" ng-click="selectAll()">Selecteer alles</button>
-          <button type="button" className="btn btn-secondary" ng-confirm-click="deleteSelected()" ng-confirm-message="Geselecteerde bezoeken verwijderen?">Verwijder geselecteerde bezoeken</button>
-        </div> }
-
       </div> }
 
       <div className="col-sm-12 form-group no-print">
