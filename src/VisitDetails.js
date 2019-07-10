@@ -126,6 +126,7 @@ class VisitDetails extends React.Component {
 
     // Update visit, formatting the form data
     const { visit, person } = this.state;
+    visit.date = data.date;
     visit.name = capitalizeName(data.name);
     visit.phone1 = formatPhoneForSave(data.phone1);
     visit.phone2 = formatPhoneForSave(data.phone2);
