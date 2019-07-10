@@ -2,7 +2,7 @@ import React from 'reactn';
 import queryString from 'query-string';
 import { withRouter, Link } from 'react-router-dom';
 import ResourceService from './services';
-import { capitalizeName, formatPostcode, formatPhoneForSave } from './formatters';
+import { capitalizeName, formatPostcode, formatPhoneForSave, filterPhone } from './formatters';
 import { FormInput } from './FormInput';
 import { FormSelect } from './FormSelect';
 import { OVERRIDE_DATE, getCurrentDate, getNow } from './CurrentDate';
@@ -246,6 +246,28 @@ class VisitDetails extends React.Component {
     this.forceUpdate();
   }
 
+  onPaste(e) {
+    const text = e.clipboardData.getData('Text');
+    const split = text.split('\t');
+    if (split.length >= 11) { //remarks is optional, length can vary
+      const { visit, person } = this.state;
+      visit.name = split[this.pasteCount + 1];
+      visit.phone1 = filterPhone(split[6]);
+      visit.phone2 = filterPhone(split[7]);
+      visit.phone3 = filterPhone(split[8]);
+      if (split.length >= 12) {
+        visit.remarks = split[11];
+      }
+      person.email = split[10];
+      person.postcode = formatPostcode(split[9]);
+      this.setState({ visit, person });
+
+      // Prevent actual paste
+      e.preventDefault();
+      this.pasteCount = this.pasteCount < 4 ? this.pasteCount + 1 : 0;
+    }
+  }
+
   render () {
     const { loading, saving, savingPerson, error, message, visit, person, isAdmin, isNew } = this.state;
     const { previousPerson } = this.global;
@@ -281,7 +303,7 @@ class VisitDetails extends React.Component {
 
             <div className="col-sm-12">
               { isAdmin && <FormInput name="date" type="date" label="Datum:" value={ visit.date } /> }
-              <FormInput name="name" type="text" label="Naam:" value={ visit.name } requiredMessage="Voer naam in" />
+              <FormInput name="name" type="text" label="Naam:" value={ visit.name } requiredMessage="Voer naam in" onPaste={this.onPaste.bind(this)} />
               <FormInput name="phone1" type="tel" label="Tel. 1:" value={ visit.phone1 } pattern={ phonePattern } requiredMessage="Voer minstens 1 telefoonnummer in" patternMessage="Ongeldig telefoonnummer" />
               <FormInput name="phone2" type="tel" label="Tel. 2:" value={ visit.phone2 } pattern={ phonePattern } patternMessage="Ongeldig telefoonnummer" />
               <FormInput name="phone3" type="tel" label="Tel. 3:" value={ visit.phone3 } pattern={ phonePattern } patternMessage="Ongeldig telefoonnummer" />

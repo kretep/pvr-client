@@ -61,3 +61,20 @@ export function formatPostcode(postcode) {
   postcode = postcode.slice(0, 4) + ' ' + postcode.slice(4, 6);
   return postcode;
 }
+
+export function filterPhone(phone) {
+  // Remove non-numeric characters
+  phone = phone.replace(/\D/g,'');
+
+  // Prepend '0' if required
+  if (phone.length == 9) {
+    phone = '0' + phone;
+  }
+
+  // Replace '31' by '0' if required
+  if (phone.length == 11 && phone.slice(0, 2) == '31') {
+    phone = '0' + phone.slice(2);
+  }
+
+  return phone;
+}
