@@ -71,7 +71,7 @@ export default class Visits extends React.Component {
     const formattedDate = dateFormat(Date.parse(date), 'dddd d mmmm yyyy');
     return (
     <div className={ OVERRIDE_DATE ? 'override-date' : '' }>
-      <div className="col-sm-12 form-group">
+      { isAdmin && <div className="col-sm-12 form-group">
         <form id="filterVisitsForm" className="form-inline no-print" noValidate onSubmit={this.search.bind(this)}>
           <label className="control-label" htmlFor="date">Filter:</label>
           <input type="date" className="form-control input-lg" name="date" defaultValue={date} onChange={this.search2.bind(this)} />
@@ -84,7 +84,11 @@ export default class Visits extends React.Component {
           </select>
           <button className="btn btn-lg btn-primary" type="submit">Zoeken</button>
         </form>
-      </div>
+      </div> }
+
+      { !isAdmin && <div className="col-sm-12 form-group no-print">
+          <Link to="/" className="float-left">Terug naar zoeken</Link><br />
+      </div> }
     
       <div className="col-sm-12">
         { loading &&  <div className="alert alert-info">
