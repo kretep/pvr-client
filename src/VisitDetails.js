@@ -1,7 +1,7 @@
 import React from 'reactn';
 import queryString from 'query-string';
 import { withRouter, Link } from 'react-router-dom';
-import ResourceService from './services';
+import ResourceService from './ResourceService';
 import { capitalizeName, formatPostcode, formatPhoneForSave, filterPhone } from './formatters';
 import { FormInput } from './FormInput';
 import { FormSelect } from './FormSelect';

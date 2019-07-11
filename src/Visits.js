@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import queryString from 'query-string';
 import dateFormat from 'dateformat';
-import ResourceService from './services';
+import ResourceService from './ResourceService';
 import { OVERRIDE_DATE, getCurrentDate } from './CurrentDate';
 import { getFormData, getFormDataFromEvent } from './utils';
 import { activities, getShortActivities } from './jeugddorp';

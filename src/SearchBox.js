@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import queryString from 'query-string';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
-import ResourceService from './services';
+import ResourceService from './ResourceService';
 import { OVERRIDE_DATE } from './CurrentDate';
 
 export default class SearchBox extends React.Component {
