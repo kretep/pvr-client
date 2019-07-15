@@ -4,7 +4,8 @@ export const activities = [
   { value: "sportenspel", label: "Sport & spel", shortLabel: "sp" },
   { value: "knutselen", label: "Knutselen", shortLabel: "kn" },
   { value: "theater", label: "Theater", shortLabel: "th" },
-  { value: "workshop", label: "Workshop", shortLabel: "ws" },
+  { value: "workshop1", label: "Workshop 1", shortLabel: "ws1" },
+  { value: "workshop2", label: "Workshop 2", shortLabel: "ws2" }
 ];
 
 export function getActivityShortLabel(activityValue) {
