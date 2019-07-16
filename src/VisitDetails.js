@@ -6,7 +6,7 @@ import { capitalizeName, formatPostcode, formatPhoneForSave, filterPhone } from 
 import { FormInput } from './FormInput';
 import { FormSelect } from './FormSelect';
 import { OVERRIDE_DATE, getCurrentDate, getNow } from './CurrentDate';
-import { activities } from './jeugddorp';
+import { activities } from './activities';
 import { getFormData } from './utils';
 import { isLocalhost } from './network';
 

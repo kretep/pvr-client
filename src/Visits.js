@@ -5,7 +5,7 @@ import dateFormat from 'dateformat';
 import ResourceService from './ResourceService';
 import { OVERRIDE_DATE, getCurrentDate } from './CurrentDate';
 import { getFormData, getFormDataFromEvent } from './utils';
-import { activities, getShortActivities } from './jeugddorp';
+import { activities, getShortActivities } from './activities';
 import { isLocalhost } from './network';
 
 export default class Visits extends React.Component {
