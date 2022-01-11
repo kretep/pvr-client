@@ -4,6 +4,12 @@ A react web application for registering persons visits to an event.
 
 Also see pvr-server and pvr-god.
 
+## Run
+
+```
+npm start
+```
+
 ## Backend
 Relies on MongoDB + Restheart as a backend. It requires two collections to be available: "kinderen" and "bezoeken".
 
